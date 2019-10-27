@@ -9,7 +9,5 @@
 
 1. Add purge (clean up of files)
 2. Allow setting of image sizes as an array in .env or .wbp file
-3. Template engines?
-4. use .wbp file for settings?
-5. auto reload of browser when files change?
-6. use chromium + puppeteer?
+3. use .wbp file for settings?
+4. auto reload of browser when files change?
