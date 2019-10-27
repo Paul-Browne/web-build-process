@@ -11,4 +11,4 @@
 2. Allow setting of image sizes as an array in .env or .wbp file
 3. use .wbp file for settings?
 4. auto reload of browser when files change?
-5. Add Source maps
+5. dev/prod server
