@@ -15,7 +15,6 @@ env.config();
 const utility = require('./utility.js');
 const build = require('./build.js');
 
-
 const sourceDirectoryName = process.env.SOURCE_DIR_NAME || 'src';
 const publicDirectoryName = process.env.PUBLIC_DIR_NAME || 'public';
 
@@ -30,7 +29,6 @@ const isPortTaken = (p) => new Promise((resolve, reject) => {
         .once('listening', () => tester.once('close', () => resolve(false)).close())
         .listen(p)
 })
-
 
 function serverSetup(protocal, port) {
     var app = express();
@@ -67,7 +65,6 @@ function startServer(port){
     })
 }
 
-
 function watching() {
     var time = Date.now();
     var watcher = chokidar.watch(sourceDirectoryName, {
@@ -94,14 +91,23 @@ function tryPorts(port){
     })
 }
 
-
-module.exports = function(){
-    mkdirp(publicDirectoryName, function(err) {
-        if (err) {
-            console.error(err);
-        }
-    });
-    tryPorts(port);
-    build(sourceDirectoryName, publicDirectoryName);
-}
+module.exports = {
+    run: function(){
+        mkdirp(publicDirectoryName, function(err) {
+            if (err) {
+                console.error(err);
+            }
+        });
+        tryPorts(port);
+        build(sourceDirectoryName, publicDirectoryName);
+    },
+    build: function(){
+        mkdirp(publicDirectoryName, function(err) {
+            if (err) {
+                console.error(err);
+            }
+        });
+        build(sourceDirectoryName, publicDirectoryName);
+    }
+};
 
