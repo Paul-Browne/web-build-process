@@ -1,11 +1,21 @@
-const utility = require("./utility.js");
-const uglifyJS = require("uglify-js");
-const path = require("path");
-const babel = require("@babel/core");
+const fs = require("fs");
+const mkdirp = require("mkdirp");
+const pathJS = require("path");
+const browserify = require("browserify");
 
-module.exports = function(source, outPath){
-	var filename = path.basename(outPath);
-	var transform = babel.transformSync(source, { filename }).code;
-	var result = uglifyJS.minify(transform);
-	utility.writeOut(result.code, outPath);
+module.exports = function(source, inPath, outPath){
+	mkdirp(pathJS.dirname(outPath), function(err) {
+	    if (err) {
+	        console.error(err);
+	    } else {
+	    	browserify(inPath)
+			.transform("babelify", {
+				plugins: ["@babel/plugin-transform-runtime"],
+				presets: ["@babel/preset-env"]
+			})
+			.plugin('tinyify', {})
+			.bundle()
+			.pipe(fs.createWriteStream(outPath));
+	    }
+	});
 };

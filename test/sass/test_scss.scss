@@ -1,0 +1,15 @@
+@use "test-use";
+
+body {
+  background: red;
+  main {
+    header {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}
+
+li {
+  @include test-use.list-reset;
+}
