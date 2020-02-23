@@ -4,7 +4,7 @@
   "description": "A simple build process for a simple web app",
   "main": "./scripts/main.js",
   "scripts": {
-    "start": "node run"
+    "start": "node ./scripts/run.js"
   },
   "repository": {
     "type": "git",
@@ -41,6 +41,8 @@
     "imagemin-pngcrush": "^6.0.0",
     "imagemin-pngquant": "^8.0.0",
     "imagemin-svgo": "^7.0.0",
+    "imagemin-jpegtran": "^6.0.0",
+    "imagemin-webp": "^5.1.0",
     "jsonminify": "^0.4.1",
     "less": "^3.10.3",
     "mime-types": "^2.1.24",
@@ -63,9 +65,5 @@
     "last 1 version",
     "> 1%",
     "IE 10"
-  ],
-  "devDependencies": {
-    "imagemin-jpegtran": "^6.0.0",
-    "imagemin-webp": "^5.1.0"
-  }
+  ]
 }

@@ -12,18 +12,16 @@ module.exports = function(inPath, outPath){
 		    } else {
 		        cssFunc(result.css, inPath, outPath.replace(/\/s(a|c)ss/, "/css").replace(/\.s(a|c)ss/, ".css"));
 		    }
-		    if(result.stats.includedFiles.length > 1){
-		    	result.stats.includedFiles.forEach(function(name){
-		    		console.log(name);
-		    	})
-		    }
+		    // if(result.stats.includedFiles.length > 1){
+		    // 	result.stats.includedFiles.forEach(function(name){
+		    // 		console.log(name);
+		    // 	})
+		    // }
 		});
-	}else{
-		console.log(inPath);
+	// }else{
+	// 	console.log(inPath);
 	}
 };
-
-
 
 // "_include":[
 // 	"output1.scss",

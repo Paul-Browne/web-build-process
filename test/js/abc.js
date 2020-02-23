@@ -42,6 +42,6 @@ export function vowAll(arr, callbackAll) {
   });
 }
 
-export function bob(number) {
+export function numberCubed(number) {
   return number * number * number;
 }

@@ -9,9 +9,9 @@ const express = require('express');
 const chokidar = require('chokidar');
 const chalk = require('chalk');
 const env = require('dotenv');
-const mkdirp = require('mkdirp');
 env.config();
 
+const mkdirp = require('mkdirp');
 const utility = require('./utility.js');
 const build = require('./build.js');
 

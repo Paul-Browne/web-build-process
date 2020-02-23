@@ -1,9 +1,6 @@
 const fs = require('fs-extra');
 const path = require('path');
-const chalk = require('chalk');
 const mime = require('mime-types');
-const env = require('dotenv');
-env.config();
 
 const utility = require('./utility.js');
 const jsFunc = require('./javascript.js');
@@ -14,7 +11,6 @@ const sassFunc = require('./sass.js');
 const lessFunc = require('./less.js');
 const imgFunc = require('./images.js');
 const copyFunc = require('./copy.js');
-
 const lastBuild = require('./lastBuild.js');
 const prettify = require('./prettify.js');
 
@@ -42,7 +38,6 @@ module.exports = function(source, public){
                 htmlFunc(fs.readFileSync(inDirectory, 'utf8'), outDirectory);
             }else if ( mime.lookup(inDirectory) === 'application/javascript' ) {
                 jsFunc(fs.readFileSync(inDirectory, 'utf8'), inDirectory, outDirectory);
-                //jsFunc(fs.readFileSync(inDirectory, 'utf8'), outDirectory);
             }else if (mime.lookup(inDirectory) === 'application/json') {
                 jsonFunc(fs.readFileSync(inDirectory, 'utf8'), outDirectory);
             }else if ( mime.lookup(inDirectory) === 'text/css' ) {
