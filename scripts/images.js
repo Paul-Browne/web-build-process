@@ -15,7 +15,6 @@ const imageminOptipng = require('imagemin-optipng');
 const imageminGifsicle = require('imagemin-gifsicle');
 const imageminSvgo = require('imagemin-svgo');
 
-// TODO webp
 const imageminWebp = require('imagemin-webp');
 
 const sizeOf = require('image-size');
@@ -81,12 +80,27 @@ async function optimizeImage(obj){
 		    	imageminGifsicle()
 		    ]
 		})
+		utility.writeOut(Gifsicle, obj.outputPath);
 	}else if (obj.mime === "image/svg+xml") {
 		var Svgo = await imagemin.buffer(obj.source, {
 		    plugins: [
 		    	imageminSvgo()
 		    ]
 		})
+		utility.writeOut(Svgo, obj.outputPath);
+	}else if (obj.mime === "image/webp") {
+		var WebP = await imagemin.buffer(obj.source, {
+		    plugins: [
+		    	imageminWebp({
+		    		quality: obj.quality.WebP
+		    	})
+		    ]
+		})
+		if(WebP.length < obj.source.length){
+			utility.writeOut(WebP, obj.outputPath);
+		}else{
+			utility.writeOut(obj.source, obj.outputPath);
+		}
 	}
 }
 
@@ -95,6 +109,7 @@ module.exports = function(source, inDirectory, outDirectory, mime){
 	optimizeImage({
 		source: source,
 		quality: {
+			WebP: 75,
 			Mozjpeg: 75,
 			Pngquant: [0.5, 0.8],
 			Optipng: 3
@@ -103,29 +118,39 @@ module.exports = function(source, inDirectory, outDirectory, mime){
 		mime: mime
 	})
 
-	imageSizesArray.forEach(function(width){
-		if(sizeOf(inDirectory).width > width && ~inDirectory.indexOf("/images/")){
-			resizeImg(source, {
-			    width: width
-			}).then(resized => {
-				optimizeImage({
-					source: resized,
-					quality: {
-						Mozjpeg: width === 40 ? 20 : 75,
-						Pngquant: width === 40 ? [0.1, 0.3] : [0.5, 0.8],
-						Optipng: 3
-					},
-					outputPath: reformatOutputDirectory(outDirectory, (width === 40 ? "placeholders" : width)),
-					mime: mime
-				})
-			})	
-		}
-	})
+	if(mime != "image/webp" && mime != "image/svg+xml"){
+
+		imageSizesArray.forEach(function(width){
+			if(sizeOf(inDirectory).width > width && ~inDirectory.indexOf("/images/")){
+				resizeImg(source, {
+				    width: width
+				}).then(resized => {
+					optimizeImage({
+						source: resized,
+						quality: {
+							WebP: width === 40 ? 20 : 75,
+							Mozjpeg: width === 40 ? 20 : 75,
+							Pngquant: width === 40 ? [0.1, 0.3] : [0.5, 0.8],
+							Optipng: 3
+						},
+						outputPath: reformatOutputDirectory(outDirectory, (width === 40 ? "placeholders" : width)),
+						mime: mime
+					})
+				})	
+			}
+		})
+	}
+
 }
 
 
+// TODO
+// test gifs
+// add options to svg
+// create webp optimized images from pngs and jpgs
 
-
+// find library that can resize webp images
+// might need to use sharp over resize-img for webp support...
 
 
 

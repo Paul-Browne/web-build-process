@@ -46,7 +46,7 @@ module.exports = function(source, public){
                 sassFunc(inDirectory, outDirectory);
             }else if (mime.lookup(inDirectory) === 'text/less' ) {
                 lessFunc(fs.readFileSync(inDirectory, 'utf8'), inDirectory, outDirectory);
-            }else if (mime.lookup(inDirectory) === 'image/jpeg' || mime.lookup(inDirectory) === 'image/png' || mime.lookup(inDirectory) === 'image/gif' || mime.lookup(inDirectory) === 'image/svg+xml') { // todo check gif
+            }else if (mime.lookup(inDirectory) === 'image/jpeg' || mime.lookup(inDirectory) === 'image/png' || mime.lookup(inDirectory) === 'image/gif' || mime.lookup(inDirectory) === 'image/svg+xml' || mime.lookup(inDirectory) === 'image/webp') { // todo check gif
                 imgFunc(fs.readFileSync(inDirectory), inDirectory, outDirectory, mime.lookup(inDirectory));
             }else{
                 copyFunc(fs.readFileSync(inDirectory, 'utf8'), outDirectory);

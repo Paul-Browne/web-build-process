@@ -1,0 +1,1 @@
+!function(){var e={};Object.defineProperty(e,"__esModule",{value:!0}),e.numberCubed=function(e){return e*e*e};var o="the square of 21 is ".concat((21,441)," and 10 x 100 is ").concat((0,e.numberCubed)(100));console.log(function(e,o,n){return e+o+n}.apply(void 0,[1,2,3])),console.log(o),console.log(100+21)}();
