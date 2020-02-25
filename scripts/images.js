@@ -5,20 +5,15 @@ const utility = require("./utility.js");
 const fs = require('fs-extra');
 
 const imagemin = require('imagemin');
-
 const imageminJpegtran = require('imagemin-jpegtran');
 const imageminMozjpeg = require('imagemin-mozjpeg');
-
 const imageminPngquant = require('imagemin-pngquant');
 const imageminOptipng = require('imagemin-optipng');
-
 const imageminGifsicle = require('imagemin-gifsicle');
 const imageminSvgo = require('imagemin-svgo');
-
 const imageminWebp = require('imagemin-webp');
-
 const sizeOf = require('image-size');
-const resizeImg = require('resize-img');
+const sharp = require('sharp');
 
 let imageSizesArray = process.env.IMAGE_SIZES ? JSON.parse(process.env.IMAGE_SIZES) : [400, 800, 1200, 1600, 2000];
 const usePlaceholderImages = process.env.IMAGE_PLACEHOLDERS ? process.env.IMAGE_PLACEHOLDERS : true;
@@ -80,14 +75,33 @@ async function optimizeImage(obj){
 		    	imageminGifsicle()
 		    ]
 		})
-		utility.writeOut(Gifsicle, obj.outputPath);
+		if(Gifsicle.length < obj.source.length){
+			utility.writeOut(Gifsicle, obj.outputPath);
+		}else{
+			utility.writeOut(obj.source, obj.outputPath);
+		}
 	}else if (obj.mime === "image/svg+xml") {
-		var Svgo = await imagemin.buffer(obj.source, {
+		var SvgoMoveGroupAttributes = await imagemin.buffer(obj.source, {
 		    plugins: [
 		    	imageminSvgo()
 		    ]
 		})
-		utility.writeOut(Svgo, obj.outputPath);
+		var SvgoDontMoveGroupAttributes = await imagemin.buffer(obj.source, {
+		    plugins: [
+		    	imageminSvgo({
+		    		plugins: [
+		    			{moveGroupAttrsToElems: false}
+		    		]
+		    	})
+		    ]
+		})
+		if(SvgoMoveGroupAttributes.length <= SvgoDontMoveGroupAttributes.length && SvgoMoveGroupAttributes.length < obj.source.length){
+			utility.writeOut(SvgoMoveGroupAttributes, obj.outputPath);
+		}else if (SvgoDontMoveGroupAttributes.length < SvgoMoveGroupAttributes.length && SvgoDontMoveGroupAttributes.length < obj.source.length) {
+			utility.writeOut(SvgoDontMoveGroupAttributes, obj.outputPath);
+		}else{
+			utility.writeOut(obj.source, obj.outputPath);
+		}
 	}else if (obj.mime === "image/webp") {
 		var WebP = await imagemin.buffer(obj.source, {
 		    plugins: [
@@ -118,13 +132,11 @@ module.exports = function(source, inDirectory, outDirectory, mime){
 		mime: mime
 	})
 
-	if(mime != "image/webp" && mime != "image/svg+xml"){
+	if(mime != "image/svg+xml"){
 
 		imageSizesArray.forEach(function(width){
 			if(sizeOf(inDirectory).width > width && ~inDirectory.indexOf("/images/")){
-				resizeImg(source, {
-				    width: width
-				}).then(resized => {
+				sharp(source).resize(width).toBuffer().then(resized => {
 					optimizeImage({
 						source: resized,
 						quality: {
