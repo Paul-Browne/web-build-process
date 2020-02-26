@@ -2,16 +2,56 @@ const chalk = require('chalk');
 const pathJS = require('path');
 const fs = require('fs-extra');
 const mkdirp = require('mkdirp');
+const mime = require('mime-types');
 
-function humanReadableFilesize(path){
-	if(fs.statSync(path).size > 999999){
-		return (fs.statSync(path).size / 1000000).toFixed(1) + " Mb";
-	}else if (fs.statSync(path).size > 999) {
-		return (fs.statSync(path).size / 1000).toFixed(0) + " Kb";
+
+
+function humanReadableFilesize(size){
+	if(size > 999999){
+		return (size / 1000000).toFixed(2) + " Mb";
+	}else if (size > 999) {
+		return (size / 1000).toFixed(1) + " Kb";
 	}else {
-		return fs.statSync(path).size + " bytes";
+		return size + " bytes";
 	}
 }
+
+
+function fileSizeColorsNotImages(size){
+	if (size > 250000) {
+		return chalk.red(humanReadableFilesize(size));
+	}else if (size > 150000) {
+		return chalk.keyword('orange')(humanReadableFilesize(size));
+	}else if (size > 50000) {
+		return chalk.yellow(humanReadableFilesize(size));
+	}else {
+		return chalk.green(humanReadableFilesize(size));
+	}
+}
+
+function fileSizeColorsImages(size){
+	if (size > 1000000) {
+		return chalk.red(humanReadableFilesize(size));
+	}else if (size > 600000) {
+		return chalk.keyword('orange')(humanReadableFilesize(size));
+	}else if (size > 200000) {
+		return chalk.yellow(humanReadableFilesize(size));
+	}else {
+		return chalk.green(humanReadableFilesize(size));
+	}
+}
+
+
+function messageWithFileSize(path){
+	var type = mime.lookup(path);
+	var size = fs.statSync(path).size;
+	if(type === 'image/jpeg' || type === 'image/png' || type === 'image/gif' || type === 'image/svg+xml' || type === 'image/webp'){
+		return fileSizeColorsImages(size);
+	}else{
+		return fileSizeColorsNotImages(size);
+	}
+}
+
 
 function consoleTimestampedMessage(message){
 	var now = new Date();
@@ -22,8 +62,8 @@ module.exports = {
 	consoleTimestampedMessage: function(message){
 		consoleTimestampedMessage(message);
 	},
-	humanReadableFilesize: function(path){
-		return humanReadableFilesize(path);
+	messageWithFileSize: function(path){
+		return messageWithFileSize(path);
 	},
 	writeOut: function(output, outPath){
 		mkdirp(pathJS.dirname(outPath), function(err) {
@@ -34,7 +74,7 @@ module.exports = {
 	                if (err) {
 	                    console.error(err);
 	                } else {
-	                    consoleTimestampedMessage(chalk.green("built: ") + outPath + " " + chalk.yellow(humanReadableFilesize(outPath)));
+	                    consoleTimestampedMessage(chalk.green("built: ") + outPath + " " + messageWithFileSize(outPath));
 	                }
 	            });
 	        }

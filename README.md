@@ -1,5 +1,14 @@
 ### Updates
 
+#### 1.2.7
+
+1. color codes file sizes
+2. adds js file info output to terminal
+
+#### 1.2.6
+
+1. improves svg image optimization
+
 #### 1.2.5
 
 1. adds IMAGE_SIZES and IMAGE_PLACEHOLDERS to .env

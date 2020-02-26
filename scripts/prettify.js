@@ -29,3 +29,6 @@ module.exports = function(path){
 		}
 	}
 }
+
+// TODO
+// prettify svgs ??

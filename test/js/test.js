@@ -1,11 +1,12 @@
 import { numberCubed, vowAll } from "./abc.js";
+
 var plus21 = require("./plus21.js");
 
 const square = x => x * x;
 
 const test_literal = `the square of 21 is ${square(
   21
-)} and 10 x 100 is ${numberCubed(100)}`;
+)} and 10 x 10 x 10 is ${numberCubed(10)}`;
 
 function sum(x, y, z) {
   return x + y + z;

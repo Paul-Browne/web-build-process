@@ -133,7 +133,6 @@ module.exports = function(source, inDirectory, outDirectory, mime){
 	})
 
 	if(mime != "image/svg+xml"){
-
 		imageSizesArray.forEach(function(width){
 			if(sizeOf(inDirectory).width > width && ~inDirectory.indexOf("/images/")){
 				sharp(source).resize(width).toBuffer().then(resized => {
@@ -152,17 +151,9 @@ module.exports = function(source, inDirectory, outDirectory, mime){
 			}
 		})
 	}
-
 }
-
 
 // TODO
 // test gifs
 // add options to svg
 // create webp optimized images from pngs and jpgs
-
-// find library that can resize webp images
-// might need to use sharp over resize-img for webp support...
-
-
-
