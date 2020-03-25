@@ -5,21 +5,30 @@ const utility = require("./utility.js");
 const fs = require('fs-extra');
 
 const imagemin = require('imagemin');
+
 const imageminJpegtran = require('imagemin-jpegtran');
 const imageminMozjpeg = require('imagemin-mozjpeg');
+
 const imageminPngquant = require('imagemin-pngquant');
 const imageminOptipng = require('imagemin-optipng');
+
 const imageminGifsicle = require('imagemin-gifsicle');
+
 const imageminSvgo = require('imagemin-svgo');
+
 const imageminWebp = require('imagemin-webp');
+
 const sizeOf = require('image-size');
 const sharp = require('sharp');
 
 let imageSizesArray = process.env.IMAGE_SIZES ? JSON.parse(process.env.IMAGE_SIZES) : [400, 800, 1200, 1600, 2000];
 const usePlaceholderImages = process.env.IMAGE_PLACEHOLDERS ? process.env.IMAGE_PLACEHOLDERS : true;
+
 if(usePlaceholderImages){
 	imageSizesArray.push(40);
 }
+
+const createWebpImages = process.env.WEBP_IMAGES ? process.env.WEBP_IMAGES : true;
 
 function reformatOutputDirectory(dirOut, width) {
 	return dirOut.replace("images", "images/" + width);
@@ -132,6 +141,16 @@ module.exports = function(source, inDirectory, outDirectory, mime){
 		mime: mime
 	})
 
+	// if(createWebpImages && mime != "image/webp" && mime != "image/svg+xml"){
+	// 	imagemin.buffer(source, {
+	// 		use: [
+	// 		    imageminWebp({quality: 1})
+	// 		]
+	// 	}).then(data => {
+	// 		utility.writeOut(data, outDirectory.replace(/\.(png|jpg|jpeg)/, ".webp"));
+	// 	})
+	// }
+
 	if(mime != "image/svg+xml"){
 		imageSizesArray.forEach(function(width){
 			if(sizeOf(inDirectory).width > width && ~inDirectory.indexOf("/images/")){
@@ -147,6 +166,19 @@ module.exports = function(source, inDirectory, outDirectory, mime){
 						outputPath: reformatOutputDirectory(outDirectory, (width === 40 ? "placeholders" : width)),
 						mime: mime
 					})
+
+					// if(createWebpImages && mime != "image/webp"){
+					// 	imagemin.buffer(source, {
+					// 	    plugins: [
+					// 	    	imageminWebp({
+					// 	    		quality: width === 40 ? 20 : 75,
+					// 	    	})
+					// 	    ]
+					// 	}).then( data => {
+					// 		utility.writeOut(data, outDirectory);
+					// 	})
+					// }
+
 				})	
 			}
 		})

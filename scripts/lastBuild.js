@@ -1,5 +1,6 @@
 const fs = require('fs-extra');
 const path = require('path');
+const mkdirp = require('mkdirp');
 
 var newestTime = 0;
 
@@ -18,6 +19,13 @@ function walkSync(inPath) {
 }
 
 module.exports = function(rootDir){
-    walkSync(rootDir);
-    return newestTime;
+    if (fs.existsSync(rootDir)) {
+        walkSync(rootDir);
+        return newestTime;
+    }else{
+        mkdirp(rootDir).then(x => {
+            walkSync(rootDir);
+        })
+        return newestTime;
+    }
 }

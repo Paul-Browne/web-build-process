@@ -1,5 +1,11 @@
 ### Updates
 
+#### 1.2.8
+
+1. Removes empty .js files
+2. updated mkdirp
+3. fixes errors when building for the first time
+
 #### 1.2.7
 
 1. color codes file sizes
@@ -22,6 +28,7 @@
 ### TODO
 
 1. Add purge (clean up of files)
-3. use .wbp file for settings?
-4. auto reload of browser when files change?
-5. dev/prod server
+2. use .wbp file for settings?
+3. auto reload of browser when files change?
+4. dev/prod server
+5. migrate scripts to seperate node packages??

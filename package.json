@@ -1,10 +1,19 @@
 {
   "name": "web-build-process",
-  "version": "1.2.7",
+  "version": "1.3.0",
   "description": "A simple build process for a simple web app",
   "main": "./scripts/main.js",
+  "files": [
+    "*",
+    "!/test",
+    "!/public",
+    "!/.git"
+  ],
   "scripts": {
-    "start": "node ./scripts/run.js"
+    "start": "node ./scripts/run.js",
+    "build": "node ./scripts/build_only.js",
+    "clean": "node ./scripts/clean.js",
+    "test": "node ./scripts/clean.js & node ./scripts/run.js"
   },
   "repository": {
     "type": "git",
@@ -44,12 +53,11 @@
     "jsonminify": "^0.4.1",
     "less": "^3.10.3",
     "mime-types": "^2.1.24",
-    "mkdirp": "^0.5.1",
+    "mkdirp": "^1.0.0",
     "net": "^1.0.2",
     "postcss": "^7.0.18",
     "postcss-clean": "^1.1.0",
     "prettier": "^1.18.2",
-    "resize-img": "^2.0.0",
     "serve-static": "^1.14.1",
     "sharp": "^0.24.1",
     "spdy": "^4.0.1",

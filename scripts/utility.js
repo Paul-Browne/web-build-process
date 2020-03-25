@@ -66,18 +66,14 @@ module.exports = {
 		return messageWithFileSize(path);
 	},
 	writeOut: function(output, outPath){
-		mkdirp(pathJS.dirname(outPath), function(err) {
-	        if (err) {
-	            console.error(err);
-	        } else {
-	            fs.writeFile(outPath, output, function(err) {
-	                if (err) {
-	                    console.error(err);
-	                } else {
-	                    consoleTimestampedMessage(chalk.green("built: ") + outPath + " " + messageWithFileSize(outPath));
-	                }
-	            });
-	        }
-	    });
+		mkdirp(pathJS.dirname(outPath)).then(x => {
+			fs.writeFile(outPath, output, function(err) {
+			    if (err) {
+			        console.error(err);
+			    } else {
+			        consoleTimestampedMessage(chalk.green("built: ") + outPath + " " + messageWithFileSize(outPath));
+			    }
+			});
+		})
 	}
 };

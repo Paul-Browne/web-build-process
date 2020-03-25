@@ -93,20 +93,12 @@ function tryPorts(port){
 
 module.exports = {
     run: function(){
-        mkdirp(publicDirectoryName, function(err) {
-            if (err) {
-                console.error(err);
-            }
-        });
+        mkdirp(publicDirectoryName);
         tryPorts(port);
         build(sourceDirectoryName, publicDirectoryName);
     },
     build: function(){
-        mkdirp(publicDirectoryName, function(err) {
-            if (err) {
-                console.error(err);
-            }
-        });
+        mkdirp(publicDirectoryName);
         build(sourceDirectoryName, publicDirectoryName);
     }
 };
