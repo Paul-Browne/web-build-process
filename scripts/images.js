@@ -22,7 +22,7 @@ const sizeOf = require('image-size');
 const sharp = require('sharp');
 
 let imageSizesArray = process.env.IMAGE_SIZES ? JSON.parse(process.env.IMAGE_SIZES) : [400, 800, 1200, 1600, 2000];
-const usePlaceholderImages = process.env.IMAGE_PLACEHOLDERS ? process.env.IMAGE_PLACEHOLDERS : true;
+const usePlaceholderImages = process.env.IMAGE_PLACEHOLDERS && process.env.IMAGE_PLACEHOLDERS == "false" ? false : true;
 
 if(usePlaceholderImages){
 	imageSizesArray.push(40);

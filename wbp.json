@@ -1,0 +1,9 @@
+{
+	"placeholderImages": true,
+	"imageSizes": [400, 800],
+	"sourceDirectory": "src",
+	"publicDirectory": "public",
+	"createWebpImages": false,
+	"sslKeyPath": "path/to/ssl.key",
+	"sslCrtPath": "path/to/ssl.crt"
+}

@@ -1,5 +1,17 @@
 ### Updates
 
+#### 1.3.3
+
+1. mininfied javascript source files (.min.js) are not minified, uglified or transpiled
+
+#### 1.3.2
+
+1. fixes the copy command to not use UTF-8
+
+#### 1.3.1
+
+1. fixes IMAGE_PLACEHOLDERS env
+
 #### 1.2.8
 
 1. Removes empty .js files
@@ -27,8 +39,8 @@
 
 ### TODO
 
-1. Add purge (clean up of files)
-2. use .wbp file for settings?
-3. auto reload of browser when files change?
-4. dev/prod server
-5. migrate scripts to seperate node packages??
+1. use .wbp file for settings?
+2. auto reload of browser when files change?
+3. dev/prod server
+4. migrate scripts to seperate node packages??
+5. template engine?

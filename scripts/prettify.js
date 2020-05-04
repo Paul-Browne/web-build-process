@@ -13,7 +13,7 @@ module.exports = function(path){
 	    parser = "html";
 	} else if (mime.lookup(path) === 'text/css' || mime.lookup(path) === 'text/x-scss' || mime.lookup(path) === 'text/x-sass' || mime.lookup(path) === 'text/less') {
 	    parser = "css";
-	} else if (mime.lookup(path) === 'application/javascript') {
+	} else if (mime.lookup(path) === 'application/javascript' &&! /\.min\.js$/.test(path)) {
 	    parser = "babel";
 	} else if (mime.lookup(path) === 'application/json') {
 	    parser = "json";

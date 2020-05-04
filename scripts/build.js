@@ -31,9 +31,7 @@ module.exports = function(source, public){
         if (fs.statSync(inDirectory).isDirectory()) {
             fs.readdirSync(inDirectory).map(subDirectory => walkSync(path.join(inDirectory, subDirectory), path.join(outDirectory, subDirectory)))
         } else if( fileHasBeenChangedSinceLastBuild(inDirectory, buildStamp) ){
-
             prettify(inDirectory);
-
             if (mime.lookup(inDirectory) === 'text/html' ) {
                 htmlFunc(fs.readFileSync(inDirectory, 'utf8'), outDirectory);
             }else if ( mime.lookup(inDirectory) === 'application/javascript' ) {
@@ -49,7 +47,7 @@ module.exports = function(source, public){
             }else if (mime.lookup(inDirectory) === 'image/jpeg' || mime.lookup(inDirectory) === 'image/png' || mime.lookup(inDirectory) === 'image/gif' || mime.lookup(inDirectory) === 'image/svg+xml' || mime.lookup(inDirectory) === 'image/webp') { // todo check gif
                 imgFunc(fs.readFileSync(inDirectory), inDirectory, outDirectory, mime.lookup(inDirectory));
             }else{
-                copyFunc(fs.readFileSync(inDirectory, 'utf8'), outDirectory);
+                copyFunc(fs.readFileSync(inDirectory), outDirectory);
             }
         }
     }
