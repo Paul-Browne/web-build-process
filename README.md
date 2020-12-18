@@ -1,5 +1,9 @@
 ### Updates
 
+#### 1.4.0
+
+1. Adds `<include src="/path/to/component.html">` method of including components of html
+
 #### 1.3.4
 
 1. decreases save timeout from 5 seconds to 1.5 for building
