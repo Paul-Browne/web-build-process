@@ -1,5 +1,9 @@
 ### Updates
 
+#### 1.4.1
+
+1. Bug fix for no include tag
+
 #### 1.4.0
 
 1. Adds `<include src="/path/to/component.html">` method of including components of html

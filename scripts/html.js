@@ -27,14 +27,15 @@ function returnRegexMatch(string, regex){
 module.exports = function(source, outPath){
 	
 	var includeTags = source.match(selfClosingIncludeTagRegex);
-	includeTags.forEach(function(tag){
-		while(z = includeSource.exec(tag)){
-			if(z[1] == "src"){
-				source = source.replace(tag, fetchResource(z[2]) );
+	if(includeTags){
+		includeTags.forEach(function(tag){
+			while(z = includeSource.exec(tag)){
+				if(z[1] == "src"){
+					source = source.replace(tag, fetchResource(z[2]) );
+				}
 			}
-		}
-	})
-
+		})
+	}
 	source = minify(source, {
 	    removeAttributeQuotes: false,
 	    collapseWhitespace: true,
