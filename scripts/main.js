@@ -72,7 +72,7 @@ function watching() {
         persistent: true
     });
     watcher.on('all', (event, path) => {
-        if(Date.now() > (time + 5000) ){
+        if(Date.now() > (time + 1500) ){
             time = Date.now();
             build(sourceDirectoryName, publicDirectoryName);
         }

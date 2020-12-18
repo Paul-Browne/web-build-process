@@ -1,5 +1,9 @@
 ### Updates
 
+#### 1.3.4
+
+1. decreases save timeout from 5 seconds to 1.5 for building
+
 #### 1.3.3
 
 1. mininfied javascript source files (.min.js) are not minified, uglified or transpiled
