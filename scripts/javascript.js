@@ -4,7 +4,6 @@ const pathJS = require("path");
 const browserify = require("browserify");
 const chalk = require('chalk');
 const utility = require("./utility.js");
-
 module.exports = function(source, inPath, outPath){
 	// if already minified
 	if(/\.min\.js$/.test(inPath)){
