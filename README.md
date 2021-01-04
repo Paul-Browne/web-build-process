@@ -1,5 +1,17 @@
 ### Updates
 
+#### 1.4.4
+
+1. moves all other file types back to only building when file changes...(really really needs a better fix)
+
+#### 1.4.3
+
+1. moves js back to only building when file changes...(really needs a better fix)
+
+#### 1.4.2
+
+1. Disable only building css/js when files change in order to build when dependance changes (needs a better fix)
+
 #### 1.4.1
 
 1. Bug fix for no include tag

@@ -52,6 +52,38 @@ module.exports = function(source, public){
         }
     }
 
+    // TODO
+    // Listen to dependants of sass/scss/less 
+    // Listen to dependants of js
+    // build only when dependants or file itself changes
+    // function walkSync(inDirectory, outDirectory) {
+    //     if (fs.statSync(inDirectory).isDirectory()) {
+    //         fs.readdirSync(inDirectory).map(subDirectory => walkSync(path.join(inDirectory, subDirectory), path.join(outDirectory, subDirectory)))
+    //     } else{
+    //         if( fileHasBeenChangedSinceLastBuild(inDirectory, buildStamp) ){
+    //             prettify(inDirectory);
+    //             if (mime.lookup(inDirectory) === 'image/jpeg' || mime.lookup(inDirectory) === 'image/png' || mime.lookup(inDirectory) === 'image/gif' || mime.lookup(inDirectory) === 'image/svg+xml' || mime.lookup(inDirectory) === 'image/webp') { // todo check gif
+    //                 imgFunc(fs.readFileSync(inDirectory), inDirectory, outDirectory, mime.lookup(inDirectory));
+    //             }else if (mime.lookup(inDirectory) === 'application/json') {
+    //                 jsonFunc(fs.readFileSync(inDirectory, 'utf8'), outDirectory);                
+    //             }else if ( mime.lookup(inDirectory) === 'application/javascript' ) {
+    //                 jsFunc(fs.readFileSync(inDirectory, 'utf8'), inDirectory, outDirectory);                    
+    //             }else{
+    //                 copyFunc(fs.readFileSync(inDirectory), outDirectory);
+    //             }
+    //         }
+    //         if (mime.lookup(inDirectory) === 'text/html' ) {
+    //             htmlFunc(fs.readFileSync(inDirectory, 'utf8'), outDirectory);
+    //         }else if ( mime.lookup(inDirectory) === 'text/css' ) {
+    //             cssFunc(fs.readFileSync(inDirectory, 'utf8'), inDirectory, outDirectory);
+    //         }else if (mime.lookup(inDirectory) === 'text/x-scss' || mime.lookup(inDirectory) === 'text/x-sass') {
+    //             sassFunc(inDirectory, outDirectory);
+    //         }else if (mime.lookup(inDirectory) === 'text/less' ) {
+    //             lessFunc(fs.readFileSync(inDirectory, 'utf8'), inDirectory, outDirectory);
+    //         }            
+    //     } 
+    // }
+
     walkSync(source, public);
         
 }
