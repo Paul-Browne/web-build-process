@@ -1,4 +1,58 @@
-### Updates
+# web-build-process
+
+1. Build from source sass, scss, less, css, html, javascript and optimize images
+2. Watch for changes to source files
+3. Prettify source on save
+4. Serve to localhost
+
+### usage
+
+`npm i -D web-build-process`
+
+```js
+const wbp = require("web-build-process");
+
+// defaults shown
+wbp({
+  source: "src",                // source directory
+  dist: "public",               // build directory
+  buildOnly: false,             // builds once only, doesn't serve, watch or prettify
+  forceBuild: false,            // force build of all files, regardless if they have changed
+  ignore: undefined,            // directory, or array of directories to ignore
+  port: 8888,                   // port, localhost:8888
+  key: ".ssl/localhost.key",    // path to your local ssl key for https://localhost
+  cert: ".ssl/localhost.crt"    // path to your local ssl cert for https://localhost
+});
+```
+
+
+## Updates
+
+### 2.0.9
+
+1. Adds build only option
+2. updates readme
+3. adds force build option
+
+### 2.0.8
+
+1. Don't copy styles or scripts onFile
+
+### 2.0.7
+
+1. Switches to prettify-source instead of prettify-this
+
+### 2.0.6
+
+1. Adds ignore directory method
+
+### 2.0.1 - 2.0.5
+
+1. bug fixes and rollup + babel config testing
+
+### 2.0.0
+
+1. Complete rewrite
 
 #### 1.4.4
 
@@ -63,8 +117,26 @@
 
 ### TODO
 
-1. use .wbp file for settings?
-2. auto reload of browser when files change?
-3. dev/prod server
-4. migrate scripts to seperate node packages??
-5. template engine?
+will be tackled in no particular order :)
+
+1. use .wbp file for settings
+2. auto reload of browser when files change
+3. template engines
+4. option: clean  - delete the build directory on change, rebuild all.
+5. option: cleanFiles  - delete only files, not images on changes, rebuild all.
+6. option: forceBuildFiles  - force build only files, not images.
+7. generate ssl for user
+8. callback when finished
+9. option: array of sizes to resize images
+10. optimize gifs
+11. optimize svgs
+12. optimize webp images
+13. option to generate webp images from pngs and jpgs
+14. show files processed in terminal
+15. show file sizes in terminal
+16. option silent to supress terminal output
+17. improve readme :)
+18. allow for user to pass babel/rollup options
+19. allow user to pass less/sass/css options
+20. option ignore dot files
+22. option ignore dot directories

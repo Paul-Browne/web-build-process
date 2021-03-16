@@ -1,3 +1,3 @@
-module.exports = function(number) {
+module.exports = function (number) {
   return number + 21;
 };

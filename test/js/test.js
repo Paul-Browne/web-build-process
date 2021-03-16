@@ -1,8 +1,11 @@
+var plus21 = require("./plus21.js");
 import { numberCubed, vowAll } from "./abc.js";
 
-var plus21 = require("./plus21.js");
+const square = (x) => x * x;
 
-const square = x => x * x;
+const someUnusedFunction = (a, b, c, d) => {
+  return a + b + c + d;
+};
 
 const test_literal = `the square of 21 is ${square(
   21

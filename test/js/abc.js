@@ -2,12 +2,12 @@ export function vowAll(arr, callbackAll) {
   // object store of responses
   var objResolved = {};
 
-  arr.forEach(function(obj, index) {
+  arr.forEach(function (obj, index) {
     // null "placeholder"
     objResolved[index] = null;
 
     var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = function () {
       if (xhr.readyState == 4) {
         // replace null with response,
         // if response is 404/403 etc, replace null with undefined
@@ -43,5 +43,5 @@ export function vowAll(arr, callbackAll) {
 }
 
 export function numberCubed(number) {
-  return number * number * number;
+  return number ** 3;
 }
