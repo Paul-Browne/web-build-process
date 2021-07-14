@@ -11,7 +11,7 @@ const buildJs = async (inPath, outPath) => {
       nodeResolve(),
       commonjs({ transformMixedEsModules: true }),
       babel({
-        babelHelpers: "bundled",
+        babelHelpers: "runtime",
         presets: [
           [
             "@babel/preset-env",
@@ -23,6 +23,9 @@ const buildJs = async (inPath, outPath) => {
             },
           ],
         ],
+        plugins: [
+            "@babel/plugin-transform-runtime"
+        ]        
       }),
       terser(),
     ],

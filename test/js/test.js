@@ -1,6 +1,15 @@
 var plus21 = require("./plus21.js");
 import { numberCubed, vowAll } from "./abc.js";
 
+function timeout() {
+  return new Promise((resolve) => setTimeout(resolve, Math.random * 6));
+}
+
+async function abcde() {
+  await timeout();
+  return "hello world";
+}
+
 const square = (x) => x * x;
 
 const someUnusedFunction = (a, b, c, d) => {

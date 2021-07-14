@@ -1,6 +1,6 @@
 {
   "name": "web-build-process",
-  "version": "2.0.9",
+  "version": "2.1.0",
   "description": "A simple build process for a simple web app",
   "main": "index.js",
   "files": [

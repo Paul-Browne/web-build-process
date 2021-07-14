@@ -140,3 +140,74 @@ will be tackled in no particular order :)
 19. allow user to pass less/sass/css options
 20. option ignore dot files
 22. option ignore dot directories
+23. sort css properties
+
+```css
+.dummy{
+    /* DISPLAY MODEL */
+    position: relative;
+    left: 0px;              /* if pos:abs */
+    top: 0px;               /* if pos:abs */
+    z-index: 123;           /* if pos:abs */
+    
+    float: left;        
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* METRICS */
+    width: 300px;
+    min-width: 100px;
+    max-width: 500px;
+    
+    height: 200px;
+    min-height: 100px;
+    max-height: 500px;
+
+    margin: 10px 20px;
+    padding: 2px 4px;
+
+    /* COLOURS */
+    background: #bada55;
+    background-position: center;
+    background-size: contain;
+
+    border: 1px solid #00825F;
+    border-radius: 5px;
+    
+    box-shadow:rgba(0, 0, 0, 0.05);
+
+
+    /* TYPOGRAPHY */
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+
+    color: #333;
+
+    line-height: 1.4em;
+    letter-spacing: 1px;
+
+    text-align: right;
+    text-transform: uppercase;
+    text-decoration: underline;
+    text-shadow: none;
+
+    vertical-align: middle;
+
+
+    /* MISC */
+    box-sizing: border-box;
+    overflow: hidden;
+    cursor: pointer;
+    user-select: none;
+    quotes: inherit;
+    white-space: pre-wrap;
+    opacity: 0.9;
+
+    /* TRANSITIONS */
+    /* ANIMATION */
+
+}
+```
