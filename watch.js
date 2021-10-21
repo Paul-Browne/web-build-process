@@ -1,8 +1,8 @@
-const chokidar = require("chokidar");
+import { watch } from "chokidar";
 
-module.exports = (source, callback) => {
+export default (source, callback) => {
   let time = Date.now();
-  const watcher = chokidar.watch(source, {
+  const watcher = watch(source, {
     ignoreInitial: true,
     persistent: true,
   });

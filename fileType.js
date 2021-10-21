@@ -1,11 +1,11 @@
-const mime = require("mime-types");
+import { lookup } from "mime-types";
 
-module.exports = (file) => {
+export default (file) => {
   /*
 		Trying to get as many from here...
 		https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
 	*/
-  const mimeType = mime.lookup(file);
+  const mimeType = lookup(file);
   let type = {
     exact: "other",
     general: undefined,

@@ -1,10 +1,10 @@
-const { rollup } = require("rollup");
-const { babel } = require("@rollup/plugin-babel");
-const { nodeResolve } = require("@rollup/plugin-node-resolve");
-const { terser } = require("rollup-plugin-terser");
-const commonjs = require("@rollup/plugin-commonjs");
+import { rollup } from "rollup";
+import { babel } from "@rollup/plugin-babel";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
+import { terser } from "rollup-plugin-terser";
+import commonjs from "@rollup/plugin-commonjs";
 
-const buildJs = async (inPath, outPath) => {
+export default async (inPath, outPath) => {
   const bundle = await rollup({
     input: inPath,
     plugins: [
@@ -35,8 +35,4 @@ const buildJs = async (inPath, outPath) => {
     file: outPath,
     sourcemap: true,
   });
-};
-
-module.exports = (inPath, outPath) => {
-  buildJs(inPath, outPath);
 };

@@ -1,16 +1,14 @@
-const wbp = require(".");
+import wbp, {reset} from "./index.js";
 
-wbp({
+const t = Date.now();
+await reset("qwerty");
+await wbp({
   source: "test",
   dist: "public",
+  prettify: true,
   port: 8899,
-  forceBuild: true
+  id: "qwerty",
+  verbose: true
 });
 
-// wbp({
-//   source: "test",
-//   dist: "dist",
-//   forceBuild: true,
-//   buildOnly: true
-// });
-
+console.log("time taken: " + (Date.now() - t));

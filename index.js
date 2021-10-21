@@ -1,19 +1,20 @@
-const devServer = require("static-server-dev");
+import {mkdir, writeFile } from 'fs/promises';
+import {dirname} from 'path';
 
-const prettifySource = require("prettify-source");
-const fileWalker = require("recursive-file-walker");
-const xToCss = require("x-to-css");
-const path = require("path");
-const fs = require("fs");
+import tscl from "time-stamped-console-log";
+import optimJPG from "imagemin-most-optimized-jpg";
+import optimPNG from "imagemin-most-optimized-png";
+import fileWalker, {reset as resetId} from "recursive-file-walker";
 
-const fileType = require("./fileType.js");
-const javascripter = require("./javascript.js");
-const watch = require("./watch.js");
+import devServer from "static-server-dev";
+import prettifySource from "prettify-source";
+import xToCss from "x-to-css";
+import htmlMinifier from "html-minifier";
+const minifyHTML = htmlMinifier.minify;
 
-const minifyHTML = require("html-minifier").minify;
-
-const optimJPG = require("imagemin-most-optimized-jpg");
-const optimPNG = require("imagemin-most-optimized-png");
+import watch from "./watch.js";
+import fileType from "./fileType.js";
+import javascripter from "./javascript.js";
 
 const compressHTML = (source) => {
   return minifyHTML(source, {
@@ -26,112 +27,91 @@ const compressHTML = (source) => {
   });
 };
 
-const makeFileSync = (_path, contents) => {
+const makeFile = async (path, contents) => {
   if (contents) {
-    fs.mkdir(path.dirname(_path), { recursive: true }, (err) => {
-      if (err) throw err;
-      fs.writeFileSync(_path, contents);
-    });
+    await mkdir(dirname(path), { recursive: true });
+    await writeFile(path, contents);
   }
 };
 
-const build = (obj) => {
-  fileWalker({
+const build = async obj => {
+  const files = await fileWalker({
     id: obj.id,
     ignoreDir: obj.ignore,
     entry: obj.sourceDir,
     readFiles: "modified",
-    onFile: (response) => {
-      if (response.modified) {
-        if (fileType(response.path).exact === "png") {
-          optimPNG(response.contents).then((image) => {
-            makeFileSync(
-              response.path.replace(obj.sourceDir, obj.distDir),
-              image
-            );
-          });
-        } else if (fileType(response.path).exact === "jpg") {
-          optimJPG(response.contents).then((image) => {
-            makeFileSync(
-              response.path.replace(obj.sourceDir, obj.distDir),
-              image
-            );
-          });
-        } else if (fileType(response.path).exact === "html") {
-          const minifiedHTML = compressHTML(response.contents.toString());
-          makeFileSync(
-            response.path.replace(obj.sourceDir, obj.distDir),
-            minifiedHTML
-          );
-        } else if (fileType(response.path).exact !== "js" && fileType(response.path).general !== "style") {
-          
-          // just copy to public
-          makeFileSync(
-            response.path.replace(obj.sourceDir, obj.distDir),
-            response.contents
-          );
-        }
-      }
-    },
-    onFinish: (response) => {
-      let modifiedStyleFile = false;
-      let modifiedScriptFile = false;
-      response.forEach((file) => {
-        if (file.modified) {
-          if (fileType(file.path).general === "style") {
-            modifiedStyleFile = true;
-          } else if (fileType(file.path).exact === "js") {
-            modifiedScriptFile = true;
-          }
-        }
-      });
-      if (modifiedScriptFile) {
-        fileWalker({
-          id: obj.id + 1,
-          ignoreDir: obj.ignore,
-          entry: obj.sourceDir,
-          onFile: (res) => {
-            if (fileType(res.path).exact === "js") {
-              fs.mkdir(
-                path.dirname(res.path.replace(obj.sourceDir, obj.distDir)),
-                { recursive: true },
-                (err) => {
-                  if (err) throw err;
-                  javascripter(
-                    res.path,
-                    res.path.replace(obj.sourceDir, obj.distDir)
-                  );
-                }
-              );
-            }
-          },
-        });
-      }
-      if (modifiedStyleFile) {
-        fileWalker({
-          id: obj.id + 2,
-          ignoreDir: obj.ignore,
-          entry: obj.sourceDir,
-          onFile: (res) => {
-            if (fileType(res.path).general === "style") {
-              xToCss(
-                res.path,
-                res.path
-                  .replace(obj.sourceDir, obj.distDir)
-                  .replace("/less/", "/css/")
-                  .replace(/\/s(a|c)ss\//, "/css/")
-                  .replace(".less", ".css")
-                  .replace(/\.s(a|c)ss/, ".css"),
-                {
-                  maps: true,
-                }
-              );
-            }
-          },
-        });
-      }
-    },
+    flatten: true
   });
+  let javascriptFileChanges = false;
+  let styleFileChanges = false;
+  files.forEach(file => {
+    if(file.modified){
+      if(obj.verbose){
+        tscl("processed: " + file.path, {
+          message:{
+            color: "yellow"
+          }
+        });
+      }
+      if (fileType(file.path).general === "style") {
+        styleFileChanges = true;
+      } else if (fileType(file.path).exact === "js") {
+        javascriptFileChanges = true;
+      }else if (fileType(file.path).exact === "png") {
+        optimPNG(file.contents).then((image) => {
+          makeFile(
+            file.path.replace(obj.sourceDir, obj.distDir),
+            image
+          );
+        });
+      } else if (fileType(file.path).exact === "jpg") {
+        optimJPG(file.contents).then((image) => {
+          makeFile(
+            file.path.replace(obj.sourceDir, obj.distDir),
+            image
+          );
+        });
+      } else if (fileType(file.path).exact === "html") {
+        const minifiedHTML = compressHTML(file.contents.toString());
+        makeFile(
+          file.path.replace(obj.sourceDir, obj.distDir),
+          minifiedHTML
+        );
+      } else{
+        // just copy to public
+        makeFile(
+          file.path.replace(obj.sourceDir, obj.distDir),
+          file.contents
+        );
+      }
+    }
+  })
+
+  if (javascriptFileChanges || styleFileChanges) {
+    files.forEach(async file => {
+      if (styleFileChanges && fileType(file.path).general === "style") {
+        xToCss(
+          file.path,
+          file.path
+            .replace(obj.sourceDir, obj.distDir)
+            .replace("/less/", "/css/")
+            .replace(/\/s(a|c)ss\//, "/css/")
+            .replace(".less", ".css")
+            .replace(/\.s(a|c)ss/, ".css"),
+          {
+            maps: true,
+          }
+        );
+      }        
+      if (javascriptFileChanges && fileType(file.path).exact === "js") {
+        await mkdir(dirname(file.path.replace(obj.sourceDir, obj.distDir)), { recursive: true });
+        await javascripter(
+          file.path,
+          file.path.replace(obj.sourceDir, obj.distDir)
+        );
+      }
+    })
+  }
 };
 
 const deleteGenerated = images => {
@@ -142,47 +122,59 @@ const deleteGenerated = images => {
   }
 }
 
-module.exports = (obj) => {
+export const reset = async id => {
+  await resetId(id || "wbp001");
+}
+
+export default async obj => {
   const source = obj.source || "src";
   const dist = obj.dist || "public";
-  const key = obj.key || ".ssl/localhost.key";
-  const cert =  obj.cert || ".ssl/localhost.crt";  
+  const key = obj.key || ".ssl/localhost.key.pem";
+  const cert =  obj.cert || ".ssl/localhost.crt.pem";  
   const port = obj.port || 8888;  
   const buildOnly = obj.buildOnly || false;
+  const prettify = obj.prettify || true;
   const ignore = obj.ignore;
   const forceBuild = obj.forceBuild || false;
+  const verbose = obj.verbose || false;
   
   // const forceBuildFiles = obj.forceBuildFiles || false;  
   // const clean = obj.clean || false; 
   // const cleanFiles = obj.cleanFiles || false;
 
-  const id = forceBuild ? Date.now() : (obj.id || 1);
+  const id = forceBuild ? Date.now() : (obj.id || "wbp001");
 
-  build({
+  if(prettify){
+    await prettifySource(source);
+  }
+
+  await build({
     sourceDir: source,
     distDir: dist,
     ignore: ignore,
-    id: id
+    id: id,
+    verbose: verbose
   });
 
   if(!buildOnly){
-    watch(source, () => {
-      build({
+    watch(source, async () => {
+      if(prettify){
+        await prettifySource(source);
+      }      
+      await build({
         sourceDir: source,
         distDir: dist,
         ignore: ignore,
-        id: id
+        id: id,
+        verbose: verbose
       });
-      prettifySource(source);
     });
-
-    prettifySource(source);
-
-    devServer({
+    await devServer({
       port: port,
       directory: dist,
       key: key,
       cert: cert
-    });     
+    });
+
   }
 };

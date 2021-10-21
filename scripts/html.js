@@ -1,3 +1,5 @@
+// refactor this!
+
 const fs = require("fs");
 const utility = require("./utility.js");
 const minify = require("html-minifier").minify;
