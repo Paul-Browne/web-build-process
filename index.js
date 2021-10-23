@@ -99,7 +99,7 @@ const build = async obj => {
             .replace(".less", ".css")
             .replace(/\.s(a|c)ss/, ".css"),
           {
-            maps: true,
+            maps: obj.sourceMaps,
           }
         );
       }        
@@ -107,7 +107,8 @@ const build = async obj => {
         await mkdir(dirname(file.path.replace(obj.sourceDir, obj.distDir)), { recursive: true });
         await javascripter(
           file.path,
-          file.path.replace(obj.sourceDir, obj.distDir)
+          file.path.replace(obj.sourceDir, obj.distDir),
+          obj.sourceMaps
         );
       }
     })
@@ -137,6 +138,7 @@ export default async obj => {
   const ignore = obj.ignore;
   const forceBuild = obj.forceBuild || false;
   const verbose = obj.verbose || false;
+  const sourceMaps = obj.sourceMaps || true;
   
   // const forceBuildFiles = obj.forceBuildFiles || false;  
   // const clean = obj.clean || false; 
@@ -153,7 +155,8 @@ export default async obj => {
     distDir: dist,
     ignore: ignore,
     id: id,
-    verbose: verbose
+    verbose: verbose,
+    sourceMaps: sourceMaps
   });
 
   if(!buildOnly){
@@ -166,7 +169,8 @@ export default async obj => {
         distDir: dist,
         ignore: ignore,
         id: id,
-        verbose: verbose
+        verbose: verbose,
+        sourceMaps: sourceMaps
       });
     });
     await devServer({
