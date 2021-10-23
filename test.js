@@ -8,7 +8,8 @@ await wbp({
   prettify: true,
   port: 8899,
   id: "qwerty",
-  verbose: true
+  verbose: true,
+  sourceMaps: false
 });
 
 console.log("time taken: " + (Date.now() - t));

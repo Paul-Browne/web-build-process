@@ -123,61 +123,62 @@ const deleteGenerated = images => {
   }
 }
 
-export const reset = async id => {
-  await resetId(id || "wbp001");
+export const reset = async (id = "wbp001") => {
+  await resetId(id);
 }
 
-export default async obj => {
-  const source = obj.source || "src";
-  const dist = obj.dist || "public";
-  const key = obj.key || ".ssl/localhost.key.pem";
-  const cert =  obj.cert || ".ssl/localhost.crt.pem";  
-  const port = obj.port || 8888;  
-  const buildOnly = obj.buildOnly || false;
-  const prettify = obj.prettify || true;
-  const ignore = obj.ignore;
-  const forceBuild = obj.forceBuild || false;
-  const verbose = obj.verbose || false;
-  const sourceMaps = obj.sourceMaps || true;
+export default async (obj = {
+  source: "src",
+  dist: "public",
+  key: ".ssl/localhost.key.pem",
+  cert: ".ssl/localhost.crt.pem",
+  port: 8888,
+  ignore: undefined,
+  buildOnly: false,
+  forceBuild: false,
+  verbose: false,
+  sourceMaps: true,
+  prettify: true
+}) => {  
   
   // const forceBuildFiles = obj.forceBuildFiles || false;  
   // const clean = obj.clean || false; 
   // const cleanFiles = obj.cleanFiles || false;
 
-  const id = forceBuild ? Date.now() : (obj.id || "wbp001");
+  const id = obj.forceBuild ? Date.now() : (obj.id || "wbp001");
 
-  if(prettify){
-    await prettifySource(source);
+  if(obj.prettify){
+    await prettifySource(obj.source);
   }
 
   await build({
-    sourceDir: source,
-    distDir: dist,
-    ignore: ignore,
     id: id,
-    verbose: verbose,
-    sourceMaps: sourceMaps
+    sourceDir: obj.source,
+    distDir: obj.dist,
+    ignore: obj.ignore,
+    verbose: obj.verbose,
+    sourceMaps: obj.sourceMaps
   });
 
-  if(!buildOnly){
-    watch(source, async () => {
-      if(prettify){
-        await prettifySource(source);
+  if(!obj.buildOnly){
+    watch(obj.source, async () => {
+      if(obj.prettify){
+        await prettifySource(obj.source);
       }      
       await build({
-        sourceDir: source,
-        distDir: dist,
-        ignore: ignore,
         id: id,
-        verbose: verbose,
-        sourceMaps: sourceMaps
+        sourceDir: obj.source,
+        distDir: obj.dist,
+        ignore: obj.ignore,
+        verbose: obj.verbose,
+        sourceMaps: obj.sourceMaps
       });
     });
     await devServer({
-      port: port,
-      directory: dist,
-      key: key,
-      cert: cert
+      port: obj.port,
+      directory: obj.dist,
+      key: obj.key,
+      cert: obj.cert
     });
 
   }
