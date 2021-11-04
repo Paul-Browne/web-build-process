@@ -28,6 +28,10 @@ wbp({
 
 ## Updates
 
+### 3.0.3
+
+Adds html import to javascript files capability
+
 ### 3.0.0
 
 uses imports, all async/await internals
@@ -122,6 +126,8 @@ uses imports, all async/await internals
 ### TODO
 
 will be tackled in no particular order :)
+
+- auto refresh of browser
 
 1. use .wbp file for settings
 2. auto reload of browser when files change
