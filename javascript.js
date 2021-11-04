@@ -4,6 +4,7 @@ import { nodeResolve } from "@rollup/plugin-node-resolve";
 import { terser } from "rollup-plugin-terser";
 import commonjs from "@rollup/plugin-commonjs";
 import html from 'rollup-plugin-html';
+import postcss from 'rollup-plugin-postcss'
 
 export default async (inPath, outPath, sourceMaps) => {
   const bundle = await rollup({
@@ -21,6 +22,9 @@ export default async (inPath, outPath, sourceMaps) => {
           removeComments: true,
           decodeEntities: true,
         }        
+      }),
+      postcss({
+        plugins: []
       }),
       babel({
         babelHelpers: "runtime",

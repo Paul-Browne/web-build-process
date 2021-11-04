@@ -28,6 +28,10 @@ wbp({
 
 ## Updates
 
+### 3.0.4
+
+Adds css/sass/scss import to javascript files capability
+
 ### 3.0.3
 
 Adds html import to javascript files capability
