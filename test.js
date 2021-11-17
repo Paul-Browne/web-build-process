@@ -2,6 +2,7 @@ import wbp, {reset} from "./index.js";
 
 const t = Date.now();
 await reset("qwerty");
+
 await wbp({
   source: "test",
   dist: "public",
@@ -9,7 +10,8 @@ await wbp({
   port: 8899,
   id: "qwerty",
   verbose: true,
-  sourceMaps: false
+  sourceMaps: false,
+  optimizeImages: false
 });
 
 console.log("time taken: " + (Date.now() - t));

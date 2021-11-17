@@ -44,53 +44,77 @@ const build = async obj => {
   });
   let javascriptFileChanges = false;
   let styleFileChanges = false;
-  files.forEach(file => {
-    if(file.modified){
-      if(obj.verbose){
-        tscl("processed: " + file.path, {
-          message:{
-            color: "yellow"
-          }
-        });
+  
+  const modifiedImages = [];
+
+  const handleImages = async (files) => {
+    for await (const file of files){
+      let image;
+      if(file.type === "png"){
+        image = await optimPNG(file.contents);
+      }else if(file.type === "jpg"){
+        image = await optimJPG(file.contents);
       }
+      await makeFile(
+        file.path.replace(obj.sourceDir, obj.distDir),
+        image
+      );
+      if(obj.verbose){tscl("processed: " + file.path, {message:{color: "yellow"}})}      
+    }
+  }
+
+  for await (const file of files){
+    if(file.modified){
       if (fileType(file.path).general === "style") {
         styleFileChanges = true;
       } else if (fileType(file.path).exact === "js") {
         javascriptFileChanges = true;
       }else if (fileType(file.path).exact === "png") {
-        optimPNG(file.contents).then((image) => {
-          makeFile(
+        if(obj.optimizeImages){
+          file.type = "png"
+          modifiedImages.push(file);
+        }else{
+          await makeFile(
             file.path.replace(obj.sourceDir, obj.distDir),
-            image
-          );
-        });
+            file.contents
+          ); 
+          if(obj.verbose){tscl("processed: " + file.path, {message:{color: "yellow"}})}         
+        }
       } else if (fileType(file.path).exact === "jpg") {
-        optimJPG(file.contents).then((image) => {
-          makeFile(
+        if(obj.optimizeImages){
+          file.type = "jpg"
+          modifiedImages.push(file);
+        }else{
+          await makeFile(
             file.path.replace(obj.sourceDir, obj.distDir),
-            image
+            file.contents
           );
-        });
+          if(obj.verbose){tscl("processed: " + file.path, {message:{color: "yellow"}})}          
+        }
       } else if (fileType(file.path).exact === "html") {
         const minifiedHTML = compressHTML(file.contents.toString());
-        makeFile(
+        await makeFile(
           file.path.replace(obj.sourceDir, obj.distDir),
           minifiedHTML
         );
+        if(obj.verbose){tscl("processed: " + file.path, {message:{color: "yellow"}})}
       } else{
         // just copy to public
-        makeFile(
+        // TODO - handle JSON
+        // TODO - handle gif, webp
+        await makeFile(
           file.path.replace(obj.sourceDir, obj.distDir),
           file.contents
         );
+        if(obj.verbose){tscl("processed: " + file.path, {message:{color: "yellow"}})}
       }
     }
-  })
+  }
 
   if (javascriptFileChanges || styleFileChanges) {
-    files.forEach(async file => {
+    for await (const file of files){
       if (styleFileChanges && fileType(file.path).general === "style") {
-        xToCss(
+        await xToCss(
           file.path,
           file.path
             .replace(obj.sourceDir, obj.distDir)
@@ -102,6 +126,7 @@ const build = async obj => {
             maps: obj.sourceMaps,
           }
         );
+        if(obj.verbose){tscl("processed: " + file.path, {message:{color: "yellow"}})}
       }        
       if (javascriptFileChanges && fileType(file.path).exact === "js") {
         await mkdir(dirname(file.path.replace(obj.sourceDir, obj.distDir)), { recursive: true });
@@ -110,9 +135,13 @@ const build = async obj => {
           file.path.replace(obj.sourceDir, obj.distDir),
           obj.sourceMaps
         );
+        if(obj.verbose){tscl("processed: " + file.path, {message:{color: "yellow"}})}
       }
-    })
+    }
   }
+
+  await handleImages(modifiedImages);
+
 };
 
 const deleteGenerated = images => {
@@ -138,7 +167,8 @@ export default async (obj = {
   forceBuild: false,
   verbose: false,
   sourceMaps: true,
-  prettify: true
+  prettify: true,
+  optimizeImages: true
 }) => {  
   
   // const forceBuildFiles = obj.forceBuildFiles || false;  
@@ -157,7 +187,8 @@ export default async (obj = {
     distDir: obj.dist,
     ignore: obj.ignore,
     verbose: obj.verbose,
-    sourceMaps: obj.sourceMaps
+    sourceMaps: obj.sourceMaps,
+    optimizeImages: obj.optimizeImages
   });
 
   if(!obj.buildOnly){
@@ -171,7 +202,8 @@ export default async (obj = {
         distDir: obj.dist,
         ignore: obj.ignore,
         verbose: obj.verbose,
-        sourceMaps: obj.sourceMaps
+        sourceMaps: obj.sourceMaps,
+        optimizeImages: obj.optimizeImages
       });
     });
     await devServer({

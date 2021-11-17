@@ -28,6 +28,12 @@ wbp({
 
 ## Updates
 
+### 3.1.0
+
+Adds option to ignore images
+Moves image processing to after file processing (if optimized == true)
+Adds proper async/await :)
+
 ### 3.0.4
 
 Adds css/sass/scss import to javascript files capability
