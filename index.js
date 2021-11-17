@@ -180,7 +180,7 @@ export default async (obj = {
   sourceMaps: true,
   prettify: true,
   optimizeImages: true,
-  cache: true,
+  cache: 3600000,
   forceJS: false
 }) => {  
   
