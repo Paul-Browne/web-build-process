@@ -67,6 +67,9 @@ const build = async obj => {
     if(file.modified){
       if (fileType(file.path).general === "style") {
         styleFileChanges = true;
+        if(obj.forceJS){
+          javascriptFileChanges = true;
+        }
       } else if (fileType(file.path).exact === "js") {
         javascriptFileChanges = true;
       }else if (fileType(file.path).exact === "png") {
@@ -92,6 +95,9 @@ const build = async obj => {
           if(obj.verbose){tscl("processed: " + file.path, {message:{color: "yellow"}})}          
         }
       } else if (fileType(file.path).exact === "html") {
+        if(obj.forceJS){
+          javascriptFileChanges = true;
+        }        
         const minifiedHTML = compressHTML(file.contents.toString());
         await makeFile(
           file.path.replace(obj.sourceDir, obj.distDir),
@@ -101,6 +107,11 @@ const build = async obj => {
       } else{
         // just copy to public
         // TODO - handle JSON
+        if(fileType(file.path).exact === "json"){
+          if(obj.forceJS){
+            javascriptFileChanges = true;
+          }
+        }
         // TODO - handle gif, webp
         await makeFile(
           file.path.replace(obj.sourceDir, obj.distDir),
@@ -168,7 +179,9 @@ export default async (obj = {
   verbose: false,
   sourceMaps: true,
   prettify: true,
-  optimizeImages: true
+  optimizeImages: true,
+  cache: true,
+  forceJS: false
 }) => {  
   
   // const forceBuildFiles = obj.forceBuildFiles || false;  
@@ -188,7 +201,8 @@ export default async (obj = {
     ignore: obj.ignore,
     verbose: obj.verbose,
     sourceMaps: obj.sourceMaps,
-    optimizeImages: obj.optimizeImages
+    optimizeImages: obj.optimizeImages,
+    forceJS: obj.forceJS
   });
 
   if(!obj.buildOnly){
@@ -203,14 +217,16 @@ export default async (obj = {
         ignore: obj.ignore,
         verbose: obj.verbose,
         sourceMaps: obj.sourceMaps,
-        optimizeImages: obj.optimizeImages
+        optimizeImages: obj.optimizeImages,
+        forceJS: obj.forceJS
       });
     });
     await devServer({
       port: obj.port,
       directory: obj.dist,
       key: obj.key,
-      cert: obj.cert
+      cert: obj.cert,
+      cache: obj.cache
     });
 
   }

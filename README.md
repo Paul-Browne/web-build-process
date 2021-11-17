@@ -16,17 +16,25 @@ wbp({
   source: "src",                // source directory default:"src"
   dist: "public",               // build directory default:"public"
   buildOnly: false,             // builds once only, doesn't serve, watch or prettify default:false
-  prettify: false,              // prettify source files, default:true
+  prettify: true,               // prettify source files, default:true
   forceBuild: false,            // force build of all files, regardless if they have changed default:false
   ignore: ["foo", "bar"],       // string, or array of directories to ignore default: undefined
   port: 8888,                   // port, localhost:8888 default:8888
   key: ".ssl/localhost.key.pem",    // path to your local ssl key for https default shown
-  cert: ".ssl/localhost.crt.pem"    // path to your local ssl cert for https default shown
+  cert: ".ssl/localhost.crt.pem",   // path to your local ssl cert for https default shown
+  cache: 3600000,               // time in ms for the server to cache assets default 1 hour
+  verbose: false,               // prints time-stamped messages to console when files are processed or prettified
+  optimizeImages: true          // optimize pngs and jpgs default true
+  sourceMaps: true              // outputs source maps for js anc css (sass/less) files
 });
 ```
 
 
 ## Updates
+
+### 3.1.1
+
+Adds cache time option
 
 ### 3.1.0
 
@@ -137,27 +145,27 @@ uses imports, all async/await internals
 
 will be tackled in no particular order :)
 
-- auto refresh of browser
-
-1. use .wbp file for settings
-2. auto reload of browser when files change
-3. template engines
-4. option: clean  - delete the build directory on change, rebuild all.
-5. option: cleanFiles  - delete only files, not images on changes, rebuild all.
-6. option: forceBuildFiles  - force build only files, not images.
-7. generate ssl for user
-8. callback when finished
-9. option: array of sizes to resize images
-10. optimize gifs
-11. optimize svgs
-12. optimize webp images
-13. option to generate webp images from pngs and jpgs
-14. show files processed in terminal
-15. show file sizes in terminal
-16. option silent to supress terminal output
-17. improve readme :)
-18. allow for user to pass babel/rollup options
-19. allow user to pass less/sass/css options
-20. option ignore dot files
-22. option ignore dot directories
-23. sort css properties
+- use .wbp file for settings
+- auto reload of browser when files change
+- template engines
+- option: clean  - delete the build directory on change, rebuild all.
+- option: cleanFiles  - delete only files, not images on changes, rebuild all.
+- option: forceBuildFiles  - force build only files, not images.
+- generate ssl for user
+- callback when finished
+- option: array of sizes to resize images
+- optimize gifs
+- optimize svgs
+- optimize webp images
+- option to generate webp images from pngs and jpgs
+- show files processed in terminal
+- show file sizes in terminal
+- option silent to supress terminal output
+- improve readme :)
+- allow for user to pass babel/rollup options
+- allow user to pass less/sass/css options
+- option ignore dot files
+- option ignore dot directories
+- sort css properties
+- auto restart after crash/ignore errors
+- option to regenerate js after css or html files change (incase importing css/html into js)
