@@ -24,8 +24,9 @@ wbp({
   cert: ".ssl/localhost.crt.pem",   // path to your local ssl cert for https default shown
   cache: 3600000,               // time in ms for the server to cache assets default 1 hour
   verbose: false,               // prints time-stamped messages to console when files are processed or prettified
-  optimizeImages: true          // optimize pngs and jpgs default true
-  sourceMaps: true              // outputs source maps for js anc css (sass/less) files
+  optimizeImages: true,         // optimize pngs and jpgs default true
+  sourceMaps: true,             // outputs source maps for js anc css (sass/less) files default true
+  forceJS: false                // force processing of js when other files (css, html, json) change
 });
 ```
 
@@ -35,6 +36,7 @@ wbp({
 ### 3.1.1
 
 Adds cache time option
+Adds force js compiling
 
 ### 3.1.0
 
